@@ -92,6 +92,20 @@ namespace BOShowHiddenStoredValues
             __result = !string.IsNullOrEmpty(result);
         }
 
+        [HarmonyPatch(typeof(UnitStoreData_ModIntSO), nameof(UnitStoreData_ModIntSO.TryGetUnitStoreDataToolTip))]
+        [HarmonyPostfix]
+        public static void OverrideSaltEnemiesFleetingDisplay_Postfix(UnitStoreData_ModIntSO __instance, ref bool __result, UnitStoreDataHolder holder, ref string result)
+        {
+            if (__instance._UnitStoreDataID != UnitStoredValueNames_GameIDs.FleetingPA.ToString())
+                return;
+
+            if (!ModConfig.OverrideSaltEnemiesFleetingDisplay.Value)
+                return;
+
+            result = FormatIntStoredValue(ModConfig.FleetingDisplayEnabled.Value, Plugin.FLEETING_AB_LOCA, Plugin.FLEETING_AB_DEFAULT, holder.m_MainData, false, ModConfig.FleetingDisplayColor.Value);
+            __result = !string.IsNullOrEmpty(result);
+        }
+
         public static string FormatIntStoredValue(bool enabled, string locId, string locDefault, int data, bool needsNonZero, Color color)
         {
             if (!enabled)
