@@ -11,6 +11,9 @@ You can individually enable or disable these displays, as well as change their c
 ```
 By default, all displays are enabled.
 
+# Interactions with other mods
+By default, this mod's Fleeting display overrides the fleeting display added by [Salt Enemies](https://steamcommunity.com/sharedfiles/filedetails/?id=3461630998). This can be disabled in the config file.
+
 # Localization Support
 This mod supports localization. The displays can be localized by adding values with these IDs to your localization's UI file:
 ```
