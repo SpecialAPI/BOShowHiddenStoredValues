@@ -16,7 +16,7 @@ namespace BOShowHiddenStoredValues
     {
         public const string MOD_GUID = "SpecialAPI.ShowHiddenStoredValues";
         public const string MOD_NAME = "Show Hidden Stored Values";
-        public const string MOD_VERSION = "1.0.1";
+        public const string MOD_VERSION = "1.0.2";
         public const string MOD_PREFIX = "ShowHiddenStoredValues";
 
         public const string FORGOTTEN_AB_LOCA = $"{MOD_PREFIX}_ForgottenAbilities";
