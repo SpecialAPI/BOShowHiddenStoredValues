@@ -94,16 +94,26 @@ namespace BOShowHiddenStoredValues
 
         [HarmonyPatch(typeof(UnitStoreData_ModIntSO), nameof(UnitStoreData_ModIntSO.TryGetUnitStoreDataToolTip))]
         [HarmonyPostfix]
-        public static void OverrideSaltEnemiesFleetingDisplay_Postfix(UnitStoreData_ModIntSO __instance, ref bool __result, UnitStoreDataHolder holder, ref string result)
+        public static void HandleModStoredValueInteractions_Postfix(UnitStoreData_ModIntSO __instance, ref bool __result, UnitStoreDataHolder holder, ref string result)
         {
-            if (__instance._UnitStoreDataID != UnitStoredValueNames_GameIDs.FleetingPA.ToString())
-                return;
+            const string HellIslandFellConsistentFleetingStoredValue = "ConsistentFleetingStoredValue";
 
-            if (!ModConfig.OverrideSaltEnemiesFleetingDisplay.Value)
-                return;
+            if (__instance._UnitStoreDataID == UnitStoredValueNames_GameIDs.FleetingPA.ToString())
+            {
+                if (!ModConfig.OverrideSaltEnemiesFleetingDisplay.Value)
+                    return;
 
-            result = FormatIntStoredValue(ModConfig.FleetingDisplayEnabled.Value, Plugin.FLEETING_AB_LOCA, Plugin.FLEETING_AB_DEFAULT, holder.m_MainData, false, ModConfig.FleetingDisplayColor.Value);
-            __result = !string.IsNullOrEmpty(result);
+                result = FormatIntStoredValue(ModConfig.FleetingDisplayEnabled.Value, Plugin.FLEETING_AB_LOCA, Plugin.FLEETING_AB_DEFAULT, holder.m_MainData, false, ModConfig.FleetingDisplayColor.Value);
+                __result = !string.IsNullOrEmpty(result);
+            }
+            else if(__instance._UnitStoreDataID == HellIslandFellConsistentFleetingStoredValue)
+            {
+                // Hell Island Fell's "consistent fleeting" starts at 1 on combat start and triggers when it reaches its stated value + 1.
+                var realFleetingTurn = Mathf.Max(holder.m_MainData - 1, 0);
+
+                result = FormatIntStoredValue(ModConfig.FleetingDisplayEnabled.Value, Plugin.FLEETING_AB_LOCA, Plugin.FLEETING_AB_DEFAULT, realFleetingTurn, false, ModConfig.FleetingDisplayColor.Value);
+                __result = !string.IsNullOrEmpty(result);
+            }
         }
 
         public static string FormatIntStoredValue(bool enabled, string locId, string locDefault, int data, bool needsNonZero, Color color)
